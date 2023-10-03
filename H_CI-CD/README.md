@@ -1,15 +1,24 @@
-# CI/CD
-
-[分布式版本控制系统git](分布式版本控制系统git/分布式版本控制系统git.md "分布式版本控制系统git")
-
-[Gitlab](Gitlab/Gitlab.md "Gitlab")
-
-[JENKINS基本操作](JENKINS基本操作/JENKINS基本操作.md "JENKINS基本操作")
-
-[jenkins实现CI/CD](jenkins实现CI-CD/jenkins实现CI-CD.md "jenkins实现CI/CD")
-
-[jenkins集成java的maven实践](jenkins集成java的maven实践/jenkins集成java的maven实践.md "jenkins集成java的maven实践")
-
-[jenkins集成sonarQube](jenkins集成sonarQube/jenkins集成sonarQube.md "jenkins集成sonarQube")
-
-[jenkins分布式部署实践](jenkins分布式部署实践/jenkins分布式部署实践.md "jenkins分布式部署实践")
+```text
+├── A_分布式版本控制系统git
+│   ├── file
+│   ├── image
+│   └── 分布式版本控制系统git.md
+├── B_Gitlab
+│   ├── Gitlab.md
+│   └── image
+├── C_JENKINS基本操作
+│   ├── JENKINS基本操作.md
+│   └── image
+├── D_jenkins实现CI-CD
+│   ├── image
+│   └── jenkins实现CI-CD.md
+├── E_jenkins集成java的maven实践
+│   ├── image
+│   └── jenkins集成java的maven实践.md
+├── F_jenkins集成sonarQube
+│   ├── image
+│   └── jenkins集成sonarQube.md
+├── G_jenkins分布式部署实践
+│   ├── image
+│   └── jenkins分布式部署实践.md
+```

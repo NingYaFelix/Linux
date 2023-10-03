@@ -268,7 +268,8 @@ systemctl restart zabbix-agent2  #重启让配置文件生效
 
 问题表达式：大于20度报警：`{server:temp.last()}>=20`
 
-恢复表达式：当温度小于或等于15c：`{server:temp.last()}<=15`
+恢复表达式：当温度小于或等于15c：`{server:temp.last()}<=15
+`
 
 磁盘剩余空间过低
 
