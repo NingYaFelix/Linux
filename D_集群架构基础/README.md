@@ -1,17 +1,25 @@
-# 集群架构基础
 
-[集群架构](集群架构/集群架构.md "集群架构")
-
-[Rsync传输](Rsync传输/Rsync传输.md "Rsync传输")
-
-[SSH-跳板机](SSH-跳板机/SSH-跳板机.md "SSH-跳板机")
-
-[视频作业](视频作业/视频作业.md "视频作业")
-
-[iptables](iptables/iptables.md "iptables")
-
-[DNS](DNS/DNS.md "DNS")
-
-[Haproxy](Haproxy/Haproxy.md "Haproxy")
-
-[openvpn](openvpn/openvpn.md "openvpn")
+```text
+├── A_集群架构
+│   ├── image
+│   └── 集群架构.md
+├── B_Rsync传输
+│   ├── NFS网络文件系统实战
+│   └── Rsync传输
+├── C_SSH-跳板机
+│   ├── SSH-跳板机
+│   └── jumpserver
+├── D_iptables
+│   ├── iptables
+│   └── 防火墙firewalld实践
+├── E_DNS
+│   ├── DNS.md
+│   └── image
+├── F_Haproxy
+│   ├── Haproxy
+│   ├── acl实践
+│   └── haproxy场景实战
+├── I_openvpn
+│   ├── OpenVPN虚拟网络实战.md
+│   └── openvpn.md
+```
