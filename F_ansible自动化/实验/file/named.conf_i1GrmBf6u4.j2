@@ -1,0 +1,56 @@
+options {
+        listen-on port 53 { any; };
+        directory       "/var/named";
+        dump-file       "/var/named/data/cache_dump.db";
+        statistics-file "/var/named/data/named_stats.txt";
+        memstatistics-file "/var/named/data/named_mem_stats.txt";
+        recursing-file  "/var/named/data/named.recursing";
+        secroots-file   "/var/named/data/named.secroots";
+        allow-query     { any; };
+
+
+{% if ansible_hostname == "dns-master" %}
+         allow-transfer {172.16.1.92;};   //允许哪些`IP`地址能同步Master配置信息；
+         also-notify {172.16.1.92;};       //Master主动通知Slave域名变发生了变更
+{% elif ansible_hostname == "dns-slave" %}
+        masterfile-format text;
+{% endif %}
+
+        recursion yes;
+        dnssec-enable yes;
+        dnssec-validation yes;
+        bindkeys-file "/etc/named.root.key";
+        managed-keys-directory "/var/named/dynamic";
+        pid-file "/run/named/named.pid";
+        session-keyfile "/run/named/session.key";
+};
+
+logging {
+        channel default_debug {
+                file "data/named.run";
+                severity dynamic;
+        };
+};
+
+    zone "." IN {
+        type hint;
+        file "named.ca";
+    };
+
+{% if ansible_hostname == "dns-master" %}
+    zone "xiaoluozi.top" IN {
+        type master;
+        file "{{ xiaoluozi_top_zone_name }}";
+    };
+{% elif ansible_hostname == "dns-slave" %}
+    zone "xiaoluozi.top" IN {
+        type slave;
+        file "slaves/{{ xiaoluozi_top_zone_name }}";
+        masters { {{ dns_master_ip }}; };
+    };
+{% endif %}
+
+include "/etc/named.rfc1912.zones";
+include "/etc/named.root.key";
+
+

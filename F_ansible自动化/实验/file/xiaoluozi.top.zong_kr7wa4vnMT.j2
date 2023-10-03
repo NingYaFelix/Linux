@@ -1,0 +1,18 @@
+$TTL 600;
+
+xiaoluozi.top.  IN      SOA     ns.xiaoluozi.top.       qq.xiaoluozi.top. (
+        202201011
+        1800
+        900
+        604800
+        86400
+)
+
+xiaoluozi.top.  IN      NS      ns1.xiaoluozi.top.
+xiaoluozi.top.  IN      NS      ns2.xiaoluozi.top.
+
+ns1.xiaoluozi.top.      IN      A       {{ dns_master_ip }}
+ns2.xiaoluozi.top.      IN      A       {{ dns_slave_ip }}
+
+www.xiaoluozi.top.      IN      A       1.1.1.1
+blog.xiaoluozi.top.     IN      A       10.0.0.200

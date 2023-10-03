@@ -1,0 +1,183 @@
+#安装nginx
+- hosts: webservers
+  tasks:
+    - name: install nginx
+      yum: 
+        name: nginx
+        enablerepo: nginx-stable
+        state: present
+    - name: delete
+      lineinfile:
+        path: /etc/nginx/nginx.conf
+        regexp: '^user'
+        state: absent
+    - name: delete
+      lineinfile:
+        path: /etc/nginx/nginx.conf
+        regexp: '^use'
+        state: absent
+    - name: create nginx.conf
+      lineinfile:
+        path: /etc/nginx/nginx.conf
+        insertbefore: worker_processes  auto;
+        line: user luo;
+    - name: systemctl start nginx
+      systemd:
+        name: nginx
+        state: started
+        enabled: yes
+
+#安装php
+    - name: Find all rpm
+      find:
+        paths: "/root/php/"
+        patterns: "*.rpm"
+      register: rpm_files
+ 
+    - name: Setting rpm_list
+      set_fact:
+        rpm_list: "{{ rpm_files.files | map(attribute='path') | list}}"
+
+    - name: installing the rpm files
+      yum:
+        name: "{{rpm_list}}"
+        state: present    
+    - name: copy php
+      copy:
+        src: ./php.ini.j2
+        dest: /etc/php.ini
+        owner: root
+        group: root
+        mode: 0644
+      notify: restart php server
+    - name: copy php.conf
+      copy:
+        src: ./file/php-fpm.www.conf.j2
+        dest: /etc/php-fpm.d/www.conf
+        owner: root
+        group: 0644
+      notify: restart php server
+    - name: systemctl start php
+      systemd:
+        name: php-fpm
+        state: started
+        enabled: yes
+
+#phpmyadmincode
+
+    - name: copy nfinxwenjian
+      copy:
+        src: ./file/ansible.lyjjhh.top.conf.j2 
+        dest: /etc/nginx/conf.d/ansible.lyjjhh.top.conf
+      notify: restart nginx server
+    - name: create ansibe directory
+      file: 
+        path: /ansible
+        owner: luo
+        group: luo
+        mode: 0755
+        recurse: yes
+    - name: unzip phpmyadmin
+      unarchive:
+        src: ./phpMyAdmin-5.1.1-all-languages.zip
+        dest: /ansible
+    - name: create link
+      file:
+        src: /ansible/phpMyAdmin-5.1.1-all-languages/
+        dest: /ansible/phpmyadmin
+        state: link
+    - name: copyphp
+      copy:
+        src: ./config.inc.php.j2
+        dest: /ansible/phpmyadmin/config.inc.php
+
+#装redis
+
+
+    - name: install redis
+      yum:
+        name: redis
+        state: present
+    - name: systemctl statr redis
+      systemd:
+        name: redis
+        state: started
+        enabled: yes
+#https
+
+- hosts: proxyserver
+  tasks:
+    - name: unzip ssl
+      unarchive:
+        src: ./ansible.lyjjhh.top.zip
+        dest: /etc/nginx/
+    - name: copy file
+      copy:
+        src: ./file/proxy_ansible.lyjjhh.top.conf.j2
+        dest: /etc/nginx/conf.d/proxy_ansible.lyjjhh.top.conf
+#haproxy均衡负载
+    - name: Unarchive /tmp Directory
+      unarchive:
+        src: ./haproxy22.rpm.tar.gz
+        dest: /tmp
+        creates: /tmp/haproxy
+
+    - name: Installed Haproxy
+      yum:
+        name: "{{ pack }}"
+      vars:
+        pack:
+          - /tmp/haproxy/haproxy22-2.2.9-3.el7.ius.x86_64.rpm
+          - /tmp/haproxy/lua53u-5.3.4-1.ius.el7.x86_64.rpm
+          - /tmp/haproxy/lua53u-devel-5.3.4-1.ius.el7.x86_64.rpm
+          - /tmp/haproxy/lua53u-libs-5.3.4-1.ius.el7.x86_64.rpm
+          - /tmp/haproxy/lua53u-static-5.3.4-1.ius.el7.x86_64.rpm
+        remote_src: no
+    - name: Configure Haproxy Server
+      copy:
+        src: ./file/haproxy_http.cfg.j2
+        dest: /etc/haproxy/haproxy.cfg
+        owner: root
+        group: root
+        mode: 0644
+      notify: Restart Haproxy Server
+    - name: Started Haproxy Server
+      systemd:
+        name: haproxy
+        state: started
+#配置ssl证书
+    - name: unzip ssl
+      unarchive:
+        src: ./ansible.lyjjhh.top.zip
+        dest: /etc/nginx/ssl
+    - name: copy file
+      copy:
+        src: ./file/proxy_ansible.lyjjhh.top.conf.j2
+        dest: /etc/nginx/conf.d/proxy_ansible.lyjjhh.top.conf
+      notify: restart nginx server
+    - name: copy nginx.conf
+      copy:
+        src: ./file/nginx_lb.conf.j2
+        dest: /etc/nginx/nginx.conf
+      notify: restart nginx server
+    - name: start nginx server
+      systemd:
+        name: nginx 
+        state: started
+  handlers: 
+    - name: Restart Haproxy Server
+      systemd:
+        name: haproxy
+        state: restarted
+    - name: restart redis
+      systemd:
+        name: redis
+        state: restarted
+    - name: restart nginx server
+      systemd: 
+        name: nginx
+        state: restarted
+    - name: restart php server
+      systemd: 
+        name: php-fpm
+        state: restarted

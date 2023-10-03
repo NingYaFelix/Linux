@@ -1,0 +1,13 @@
+frontend blog
+  bind *:80
+  mode http
+#
+  acl blog_domain hdr_reg(host) -i {{ type_name }}
+  use_backend  blog_cluster if blog_domain
+
+
+backend blog_cluster
+        balance roundrobin
+{% for host in groups['webservers'] %}
+        server {{ host }} {{ host }}:{{ haproxy_port }} check port {{ haproxy_port }}
+{% endfor %}
