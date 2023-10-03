@@ -82,13 +82,13 @@ external_url 'http://gitlab.oldxu.net'
     2.后期修改密码时，需要通过邮件修改
 ### Email Settings
 gitlab_rails['gitlab_email_enabled'] = true
-gitlab_rails['gitlab_email_from'] = '2388741949@qq.com'
+gitlab_rails['gitlab_email_from'] = '邮箱@qq.com'
 gitlab_rails['gitlab_email_display_name'] = 'xlz'
 gitlab_rails['smtp_enable'] = true
 gitlab_rails['smtp_address'] = "smtp.qq.com"
 gitlab_rails['smtp_port'] = 465
-gitlab_rails['smtp_user_name'] = "2388741949@qq.com"
-gitlab_rails['smtp_password'] = "oolrapwwdqkkdhfj"
+gitlab_rails['smtp_user_name'] = "邮箱@qq.com"
+gitlab_rails['smtp_password'] = "密码"
 gitlab_rails['smtp_domain'] = "qq.com"
 gitlab_rails['smtp_authentication'] = "login"
 gitlab_rails['smtp_enable_starttls_auto'] = true
